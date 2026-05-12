@@ -1,0 +1,528 @@
+\documentclass[12pt, a4paper]{report}
+
+% --- PAQUETES ESENCIALES ---
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish]{babel}
+\usepackage{amsmath, amssymb}
+\usepackage{graphicx}
+\usepackage{geometry}
+\usepackage{parskip} 
+\usepackage{caption}
+\usepackage{float}
+\usepackage{booktabs} 
+
+% --- PAQUETES PARA DISEÑO MODERNO Y CORRECCIONES ---
+\usepackage{lmodern}
+\usepackage[sans]{dsfont}
+\usepackage{microtype}
+\usepackage{enumitem}
+\usepackage[dvipsnames]{xcolor} 
+\usepackage{hyperref} 
+\usepackage[many]{tcolorbox}
+\usepackage{titlesec}
+\usepackage{fancyhdr}
+\usepackage{tocloft}
+\usepackage{fontawesome5}
+\usepackage{ragged2e} % Para un mejor ajuste de texto (RaggedRight)
+
+% --- CONFIGURACIÓN DE TIPOGRAFÍA ---
+\renewcommand{\familydefault}{\sfdefault}
+
+% --- PALETA DE COLORES MODERNA ---
+\definecolor{maincolor}{HTML}{00529B}
+\definecolor{accentcolor}{HTML}{FFA62B}
+\definecolor{textcolor}{HTML}{333333}
+\definecolor{lightgray}{HTML}{F7F7F7}
+\definecolor{mediumgray}{HTML}{E0E0E0}
+\definecolor{notecolor}{HTML}{28A745}
+\definecolor{warningcolor}{HTML}{DC3545}
+\definecolor{arquicolor}{HTML}{4E5D94}
+
+% --- CONFIGURACIÓN DE HIPERVÍNCULOS ---
+\hypersetup{
+    colorlinks=true,
+    linkcolor=maincolor,
+    urlcolor=maincolor,
+    citecolor=ForestGreen,
+    pdftitle={Manual de Arquitectura - Software de Espectrofotómetro AS726X},
+    pdfauthor={Sebastian H Betancur},
+}
+
+% --- CONFIGURACIÓN DE TÍTULOS (TITULOS) ---
+\titleformat{\chapter}[display]
+  {\normalfont\sffamily\huge\bfseries\color{textcolor}}
+  {\filleft\parbox[t]{2.5cm}{\fontsize{80}{80}\selectfont\bfseries\color{maincolor!30}\thechapter}}
+  {-10pt}
+  {\color{maincolor}\rule{\textwidth}{2pt}\vskip10pt\Huge\bfseries\sffamily\filright}
+  [\vskip10pt\color{maincolor!50}\rule{\textwidth}{0.4pt}]
+\titlespacing*{\chapter}{0pt}{-20pt}{30pt}
+
+\titleformat{\section}{\normalfont\sffamily\Large\bfseries\color{maincolor}}{\thesection}{1em}{}
+\titleformat{\subsection}{\normalfont\sffamily\large\bfseries\color{textcolor}}{\thesubsection}{1em}{}
+\titleformat{\subsubsection}{\normalfont\sffamily\normalsize\bfseries\color{maincolor!80!black}}{\thesubsubsection}{1em}{}
+
+
+% --- CONFIGURACIÓN DE CAJAS DE TEXTO (TCOLORBOX) CON ICONOS ---
+\tcbuselibrary{skins, breakable, shadows}
+\newtcolorbox{arquibox}[1][]{
+  enhanced, breakable,
+  colback=arquicolor!5, colframe=arquicolor,
+  fonttitle=\bfseries, coltitle=textcolor,
+  attach boxed title to top left={yshift=-0.25cm, xshift=0.5cm},
+  boxed title style={colback=arquicolor, colframe=arquicolor, sharp corners},
+  title=\sffamily\bfseries\color{white}\faCogs\quad #1,
+  sharp corners, boxrule=1pt,
+  underlay={
+    \path[fill=arquicolor] (frame.north west) rectangle ([xshift=5mm]frame.south west);
+  }
+}
+\newtcolorbox{notebox}[1][]{
+  enhanced, breakable,
+  colback=notecolor!5, colframe=notecolor,
+  fonttitle=\bfseries, coltitle=textcolor,
+  attach boxed title to top left={yshift=-0.25cm, xshift=0.5cm},
+  boxed title style={colback=notecolor, colframe=notecolor, sharp corners},
+  title=\sffamily\bfseries\color{white}\faInfoCircle\quad #1,
+  sharp corners, boxrule=1pt,
+  underlay={
+    \path[fill=notecolor] (frame.north west) rectangle ([xshift=5mm]frame.south west);
+  }
+}
+\newtcolorbox{diagbox}[1][]{
+  enhanced, breakable,
+  colback=lightgray, colframe=mediumgray,
+  fonttitle=\bfseries, coltitle=textcolor,
+  attach boxed title to top left={yshift=-0.25cm, xshift=0.5cm},
+  boxed title style={colback=mediumgray, colframe=mediumgray, sharp corners},
+  title=\sffamily\bfseries\color{textcolor}\faProjectDiagram\quad #1,
+  sharp corners, boxrule=1pt
+}
+
+
+% --- CONFIGURACIÓN DE ENCABEZADOS Y PIES DE PÁGINA ---
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\sffamily\nouppercase{\leftmark}}
+\fancyfoot[C]{\sffamily\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0pt}
+\renewcommand{\chaptermark}[1]{\markboth{#1}{}}
+\fancypagestyle{plain}{
+    \fancyhf{}
+    \fancyfoot[C]{\sffamily\thepage}
+    \renewcommand{\headrulewidth}{0pt}
+}
+
+% --- CONFIGURACIÓN DE ÍNDICE DE CONTENIDOS (TOCLOFT) ---
+\renewcommand{\cftchapfont}{\sffamily\bfseries}
+\renewcommand{\cftsecfont}{\sffamily}
+\renewcommand{\cftsubsecfont}{\sffamily}
+\renewcommand{\cftdot}{}
+\renewcommand{\cftchapleader}{\sffamily\bfseries}
+\renewcommand{\cftchappagefont}{\sffamily\bfseries}
+\setlength{\cftbeforechapskip}{5pt}
+
+% --- DATOS DEL DOCUMENTO ---
+\title{Software para Espectrofotómetro AS726X}
+\author{Sebastian H. Betancur}
+\date{Agosto 2025}
+
+\begin{document}
+\color{textcolor}
+
+% --- PORTADA MODERNA ---
+\begin{titlepage}
+    \begin{tcolorbox}[
+        enhanced,
+        colback=lightgray,
+        colframe=maincolor,
+        boxrule=0pt,
+        sharp corners,
+        height=\textheight,
+        valign=center
+    ]
+        \centering
+        \includegraphics[width=0.7\textwidth]{BiomicrosystemsLogo.png}\\[3cm]
+        {\sffamily\bfseries\Huge Software para Espectrofotómetro AS726X\par}
+        \color{maincolor}\rule{0.8\textwidth}{1.5pt}\\[2cm]
+        {\sffamily\bfseries\LARGE Manual de Arquitectura de Software\par}\\[5cm]
+        \vfill
+        {\sffamily\large Sebastian H. Betancur\par}
+        {\sffamily\normalsize Grupo de Investigación Biomicrosystems\par}
+        {\sffamily\normalsize Universidad de los Andes\par}
+        \vspace{1cm}
+        {\sffamily\normalsize Agosto de 2025\par}
+    \end{tcolorbox}
+\end{titlepage}
+
+
+% --- ÍNDICE ---
+\tableofcontents
+\newpage
+
+% -----------------------------------------------------------------------------
+\chapter{Visión General de la Arquitectura}\label{chap:intro}
+% -----------------------------------------------------------------------------
+
+\section{Propósito del Documento}
+Este manual detalla la arquitectura interna del software de control desarrollado para el espectrofotómetro AS726X. Su objetivo es servir como una guía técnica exhaustiva para desarrolladores, con el fin de facilitar el mantenimiento, la depuración y la extensión de funcionalidades sobre la base de código existente. El documento asume que el lector posee conocimientos básicos de programación orientada a objetos y de Python.
+
+\section{Filosofía de Diseño y Patrones}
+La arquitectura del software se fundamenta en un conjunto de principios de diseño orientados a garantizar la robustez, mantenibilidad y escalabilidad del sistema.
+
+La estructura principal se inspira en el conocido patrón \textbf{Modelo-Vista-Controlador (MVC)}, que promueve una clara separación de responsabilidades. El \textbf{Modelo}, representado por las \texttt{dataclasses} en \texttt{app\_state.py}, funciona como un contenedor pasivo para los datos y el estado de la aplicación. La \textbf{Vista}, compuesta por los componentes de la interfaz gráfica de PyQt5, se encarga exclusivamente de la presentación de la información y de la captura de las interacciones del usuario. En el centro, el \textbf{Controlador}, implementado en la clase principal \texttt{SpectrometerApp}, actúa como el intermediario que orquesta la comunicación entre la Vista y el Modelo, y ejecuta la lógica de la aplicación.
+
+Este enfoque se complementa con un \textbf{diseño altamente modular}, donde cada funcionalidad importante está encapsulada en su propio módulo. La comunicación entre estos módulos se gestiona a través de un paradigma de \textbf{programación orientada a eventos}, utilizando el mecanismo de señales y slots de Qt. Esto crea un sistema desacoplado, donde los componentes emiten "señales" para notificar eventos, y otros componentes se "suscriben" a ellas a través de "slots", sin necesidad de dependencias directas.
+
+Finalmente, para garantizar que la interfaz de usuario nunca se bloquee, las operaciones potencialmente lentas como la comunicación con el hardware se manejan de forma \textbf{asíncrona}. La lectura del puerto serie se delega a un hilo de ejecución secundario, que trabaja en segundo plano y notifica al hilo principal mediante señales cuando llegan nuevos datos, asegurando una experiencia de usuario siempre fluida.
+
+\section{Jerarquía e Interacción entre Clases}
+
+El componente central, que actúa como el orquestador de la aplicación, es la clase \textbf{\texttt{SpectrometerApp}}. Esta clase, que define la ventana principal, contiene las instancias de los demás componentes importantes: los paneles de la interfaz, los controladores de lógica como \texttt{FileManager} y \texttt{CalculationController}, y los objetos de estado del Modelo. Es el único componente con una visión global del sistema y la responsabilidad de coordinar todas las operaciones.
+
+La interfaz de usuario (la Vista) está organizada bajo una jerarquía de herencia. Se definió una clase base, \textbf{\texttt{BasePanel}}, que actúa como una plantilla abstracta para todas las pestañas principales. Esta clase base establece una estructura visual común y una interfaz de comunicación estándar. Los paneles específicos como \texttt{MainSpectrumPanel} o \texttt{CalibrationCurveTab} heredan de \texttt{BasePanel} para implementar su funcionalidad particular. De esta forma se busca mantener la consistencia visual y funcional en toda la aplicación y la reutilización de código.
+
+La interacción entre estos componentes se gestiona a través del \textbf{mecanismo de señales y slots de Qt}. En lugar de llamadas directas a métodos, los componentes se comunican de forma indirecta. Por ejemplo, cuando un usuario presiona un botón en un panel (Vista), este emite una señal (ej. \texttt{requestMeasurement}). La clase \texttt{SpectrometerApp} (Controlador) conecta previamente esa señal a uno de sus propios métodos (un slot), que ejecuta la lógica de medición. Este mismo mecanismo permite la comunicación segura entre hilos: el \texttt{SerialWorker}, desde su hilo secundario, emite la señal \texttt{data\_received}, que es gestionada por un slot en \texttt{SpectrometerApp} en el hilo principal de la interfaz.
+
+\section{Decisiones Clave y Alternativas Consideradas}
+La selección de tecnologías para el proyecto se basó en una evaluación de alternativas y sus respectivos compromisos (\textit{trade-offs}).
+
+Se eligió \textbf{PyQt5} como framework para la interfaz de usuario sobre otras alternativas por su robusto conjunto de widgets y su excelente integración con \texttt{Matplotlib}, un requisito fundamental para la visualización de gráficos científicos.
+
+Para el manejo de la concurrencia, se optó por el sistema de hilos nativo de Qt, \textbf{QThread}. Esta decisión se tomó por la integración nativa y sin fisuras con el bucle de eventos de PyQt5, ya que el uso de señales y slots entre hilos simplifica la arquitectura y reduce errores.
+
+Finalmente, la estructura de la interfaz se diseñó de forma \textbf{modular por paneles}, donde cada pestaña es una clase independiente. Esto, si bien requiere una clase base y un sistema de señales, se alinea con el principio de Responsabilidad Única y facilita enormemente el mantenimiento y la escalabilidad del software a largo plazo.
+
+% -----------------------------------------------------------------------------
+\chapter{Guía de Despliegue y Dependencias}\label{chap:despliegue}
+% -----------------------------------------------------------------------------
+Esta sección detalla los requisitos de software y los pasos necesarios para configurar el entorno de desarrollo y ejecutar la aplicación.
+
+\section{Dependencias de Software}
+La aplicación está construida sobre Python y requiere varias librerías externas para funcionar.
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Python:} Se recomienda la versión 3.8 o superior.
+    \item \textbf{PyQt5:} Es el framework principal para la construcción de la interfaz gráfica de usuario.
+    \item \textbf{Matplotlib:} Utilizada para la creación de todos los gráficos y visualizaciones de datos.
+    \item \textbf{NumPy:} Es la librería fundamental para la computación numérica y el manejo de datos espectrales.
+    \item \textbf{SciPy:} Utilizada específicamente para su módulo de estadísticas para calcular las curvas de calibración.
+    \item \textbf{pyserial:} Proporciona la funcionalidad para la comunicación con el puerto serie del microcontrolador.
+    \item \textbf{Arduino IDE:} Necesario para compilar y cargar el firmware (\texttt{Espectrofotometro.ino}) en la placa.
+\end{itemize}
+
+\section{Instalación del Entorno}
+La forma recomendada de gestionar las dependencias es a través de un entorno virtual y el gestor de paquetes \texttt{pip}.
+\begin{enumerate}
+    \item \textbf{Crear un entorno virtual (Recomendado):}
+    \begin{verbatim}
+python -m venv venv
+source venv/bin/activate  # En Windows: venv\Scripts\activate
+    \end{verbatim}
+
+    \item \textbf{Crear un archivo \texttt{requirements.txt}:} Cree un archivo de texto con este nombre en la raíz del proyecto y añada el siguiente contenido o use el archivo adjunto:
+    \begin{verbatim}
+PyQt5==5.15.10
+matplotlib==3.8.4
+numpy==1.26.4
+scipy==1.13.1
+pyserial==3.5
+    \end{verbatim}
+    
+    \item \textbf{Instalar las dependencias:} Con el entorno virtual activado, ejecute el siguiente comando en la terminal:
+    \begin{verbatim}
+pip install -r requirements.txt
+    \end{verbatim}
+    
+    \item \textbf{Ejecutar la aplicación:} Una vez instaladas las dependencias, la aplicación se puede iniciar ejecutando el script:
+    \begin{verbatim}
+python main.py
+    \end{verbatim}
+\end{enumerate}
+
+% -----------------------------------------------------------------------------
+\chapter{El Controlador: Lógica y Comunicación}\label{chap:controlador}
+% -----------------------------------------------------------------------------
+\newcommand{\metodolabel}[1]{\parbox[t]{6.8cm}{\RaggedRight\texttt{#1}}}
+
+Esta capa es el cerebro de la aplicación, responsable de la lógica de negocio, la orquestación de la UI y la comunicación con el mundo exterior.
+
+\section{La Aplicación Principal: \texttt{main.py}}
+\begin{arquibox}[Clase \texttt{SpectrometerApp(QMainWindow)}]
+Esta clase es el orquestador central. Hereda de \texttt{QMainWindow} de PyQt5 y es responsable de inicializar y conectar todos los componentes, gestionar el estado global de la aplicación y manejar todos los eventos principales, ya sean de la UI o del hardware.
+\setlist{nolistsep}
+\begin{description}[leftmargin=!,style=nextline]
+    \item[\metodolabel{\_\_init\_\_()}] Constructor de la clase. Inicializa la ventana principal, crea las instancias de las clases de estado, los timers, los controladores de lógica, y llama a los métodos internos para construir la UI y conectar las señales.
+    \item[\metodolabel{\_set\_theme(is\_dark)}] Aplica la hoja de estilos (QSS) del tema claro u oscuro a toda la aplicación y notifica a los paneles para que actualicen sus gráficos.
+    \item[\metodolabel{\_manual\_toggle\_theme(checked)}] Se activa cuando el usuario cambia el tema desde el menú y llama a \texttt{\_set\_theme}.
+    \item[\metodolabel{\_apply\_initial\_theme()}] Se llama una sola vez al inicio para aplicar el tema por defecto a la aplicación.
+    \item[\metodolabel{\_create\_menu()}] Construye y configura la barra de menú superior de la aplicación.
+    \item[\metodolabel{\_create\_widgets()}] Crea todas las instancias de los widgets de la interfaz en memoria.
+    \item[\metodolabel{\_update\_logo()}] Carga y reescala el logo correspondiente al tema actual para mostrarlo en la UI.
+    \item[\metodolabel{resizeEvent(event)}] Se activa al cambiar el tamaño de la ventana para reescalar el logo dinámicamente.
+    \item[\metodolabel{showEvent(event)}] Se activa la primera vez que la ventana se muestra, para cargar el logo y el mensaje de bienvenida.
+    \item[\metodolabel{\_show\_startup\_info()}] Muestra un diálogo emergente al inicio para advertir al usuario sobre el cierre seguro de la aplicación.
+    \item[\metodolabel{\_create\_layouts()}] Ensambla todos los widgets creados en la disposición final de la ventana.
+    \item[\metodolabel{\_connect\_signals()}] Conecta todas las señales emitidas por los widgets y paneles a sus respectivos slots en esta clase, centralizando el manejo de eventos.
+    \item[\metodolabel{\_on\_plot\_type\_changed(plot\_type\_enum)}] Se activa al cambiar el tipo de gráfico (Intensidad, Absorbancia, etc.) y redibuja el gráfico.
+    \item[\metodolabel{\_on\_superimpose\_selection\_changed(labels)}] Se activa cuando el usuario cambia la selección de espectros a superponer y actualiza el gráfico.
+    \item[\metodolabel{\_on\_log\_scale\_y\_toggled(checked)}] Cambia la escala del eje Y del gráfico principal entre lineal y logarítmica.
+    \item[\metodolabel{\_on\_show\_markers\_toggled(checked)}] Muestra u oculta los marcadores de puntos en las líneas del gráfico.
+    \item[\metodolabel{\_on\_show\_I0\_toggled(checked)}] Permite visualizar la línea de referencia I\textsubscript{0} en el gráfico de intensidad.
+    \item[\metodolabel{\_on\_calibration\_applied(params)}] Recibe los parámetros de una nueva curva de calibración desde el panel de calibración y los guarda en el estado.
+    \item[\metodolabel{\_on\_transfer\_model\_applied(params)}] Recibe los parámetros de un nuevo modelo de transferencia y los guarda en el estado.
+    \item[\metodolabel{\_on\_concentration\_config\_changed()}] Gestiona las dependencias lógicas entre los controles de cálculo de concentración.
+    \item[\metodolabel{\_populate\_ports(called\_by\_timer)}] Busca y añade los puertos seriales disponibles al menú desplegable.
+    \item[\metodolabel{\_check\_for\_new\_ports\_and\_autoconnect()}] Tarea periódica que revisa si hay nuevos dispositivos seriales y trata de autoconectar.
+    \item[\metodolabel{\_connect\_serial()}] Gestiona la lógica de conexión: abre el puerto serial e inicia el \texttt{SerialWorker} en un hilo secundario.
+    \item[\metodolabel{\_disconnect\_serial(due\_to\_error)}] Inicia el proceso de desconexión segura del puerto serial.
+    \item[\metodolabel{\_perform\_actual\_disconnect(due\_to\_error)}] Realiza la desconexión efectiva: detiene el hilo, cierra el puerto y actualiza la UI.
+    \item[\metodolabel{\_handle\_serial\_error\_message(error\_message)}] Recibe y registra en el log los errores de comunicación reportados por el \texttt{SerialWorker}.
+    \item[\metodolabel{\_handle\_connection\_lost()}] Se activa cuando la conexión con el dispositivo se pierde y fuerza una desconexión limpia.
+    \item[\metodolabel{\_on\_worker\_finished()}] Se activa cuando el hilo del worker termina su ejecución para una limpieza de recursos.
+    \item[\metodolabel{\_send\_command\_direct(command)}] Envía un comando al puerto serial sin validaciones ni registro en log.
+    \item[\metodolabel{\_send\_command(command)}] Es el método principal para enviar comandos al hardware, validando la conexión y registrando la acción.
+    \item[\metodolabel{\_handle\_serial\_data(raw\_line)}] Es el manejador central de datos entrantes. Procesa cada línea recibida del Arduino y la enruta al método de procesamiento adecuado.
+    \item[\metodolabel{\_process\_error\_msg(parts, raw\_line)}] Procesa un mensaje de error explícito enviado por el dispositivo.
+    \item[\metodolabel{\_process\_calblanco\_data(parts, raw\_line)}] Procesa y almacena los datos de la medición de referencia (I\textsubscript{0}).
+    \item[\metodolabel{\_process\_blanco\_data(parts, raw\_line)}] Procesa un espectro de medición de muestra (I).
+    \item[\metodolabel{\_process\_medicion\_detenida\_msg(parts, raw\_line)}] Procesa el mensaje de confirmación de detención enviado por el Arduino.
+    \item[\metodolabel{\_process\_direct\_measurement\_data(command\_type, ...)}] Maneja los datos recibidos durante una medición directa solicitada por un panel secundario.
+    \item[\metodolabel{\_check\_preconditions\_for\_measurement(name)}] Valida que se cumplan las condiciones para iniciar una medición.
+    \item[\metodolabel{\_measure\_reference\_i0()}] Inicia el flujo de trabajo para medir la referencia (blanco).
+    \item[\metodolabel{\_toggle\_measurement\_config\_widgets()}] Habilita o deshabilita los inputs de configuración según el modo de medición.
+    \item[\metodolabel{\_start\_unified\_measurement()}] Inicia una de las mediciones principales (Continua, Única o Secuencial).
+    \item[\metodolabel{\_stop\_current\_measurement(silent)}] Detiene la medición principal que esté en curso.
+    \item[\metodolabel{\_finish\_current\_measurement(success, ...)}] Finaliza una medición, enviando el comando "detener" y restaurando el estado de la aplicación.
+    \item[\metodolabel{\_process\_collected\_sub\_samples()}] En los modos Único o Secuencial, promedia las sub-muestras acumuladas.
+    \item[\metodolabel{request\_single\_value\_measurement(panel\_id, ...)}] Atiende las solicitudes de mediciones directas provenientes de otros paneles.
+    \item[\metodolabel{\_handle\_direct\_measurement\_timeout(reason)}] Manejador para cuando una medición directa falla.
+    \item[\metodolabel{\_full\_plot\_update()}] Recopila todo el estado y solicita un redibujado completo al panel principal.
+    \item[\metodolabel{\_on\_calculate\_and\_register\_concentration\_clicked()}] Inicia el cálculo de concentración y registra el resultado.
+    \item[\metodolabel{\_on\_I0\_blank\_subtraction\_toggled(state)}] Activa o desactiva la sustracción de blanco.
+    \item[\metodolabel{set\_active\_calibration\_curve(slope, ...)}] Guarda en el estado una nueva curva de calibración de sesión.
+    \item[\metodolabel{set\_active\_transfer\_model(slope\_t, ...)}] Guarda en el estado un nuevo modelo de transferencia.
+    \item[\metodolabel{clear\_active\_transfer\_model(wavelength\_nm)}] Elimina un modelo de transferencia activo para una longitud de onda.
+    \item[\metodolabel{\_save\_reference\_calibration\_params()}] Guarda en el estado los parámetros de una calibración de referencia externa.
+    \item[\metodolabel{\_load\_reference\_calibration\_params\_for\_wl()}] Carga en la UI los parámetros de calibración de referencia guardados.
+    \item[\metodolabel{\_toggle\_ref\_cal\_inputs()}] Habilita los inputs para 'curva' o 'factor' según el tipo de calibración de referencia.
+    \item[\metodolabel{\_update\_ref\_cal\_display(wavelength\_nm)}] Actualiza la etiqueta de la UI que resume los parámetros de referencia guardados.
+    \item[\metodolabel{\_update\_status\_label(text, style)}] Actualiza el texto y color de la etiqueta de estado de conexión.
+    \item[\metodolabel{\_update\_status\_label\_style()}] Refresca el estilo de la etiqueta de estado al cambiar de tema.
+    \item[\metodolabel{\_update\_value\_labels(value\_array, ...)}] Función auxiliar para actualizar las etiquetas de la UI con los valores de un espectro.
+    \item[\metodolabel{\_update\_numeric\_displays()}] Actualiza los displays numéricos de I\textsubscript{0} e I.
+    \item[\metodolabel{\_update\_ui\_state()}] Habilita o deshabilita todos los controles de la interfaz según el estado actual de la aplicación.
+    \item[\metodolabel{\_log(message, is\_error, is\_debug)}] Añade un mensaje con timestamp al log de eventos.
+    \item[\metodolabel{\_show\_error(message)}] Muestra un diálogo de error crítico al usuario.
+    \item[\metodolabel{\_show\_info(message)}] Muestra un diálogo de información general.
+    \item[\metodolabel{\_show\_help()}] Muestra la ventana principal de ayuda.
+    \item[\metodolabel{\_show\_context\_help(help\_id\_key)}] Muestra una ayuda contextual específica.
+    \item[\metodolabel{\_show\_about\_dialog()}] Muestra el diálogo 'Acerca de...'.
+    \item[\metodolabel{closeEvent(event)}] Se activa al cerrar la ventana para asegurar un apagado seguro.
+    \item[\metodolabel{\_finalize\_close(event)}] Realiza los pasos finales de cierre, como desconectar el puerto serial.
+    \item[\metodolabel{\_update\_superimpose\_list()}] Actualiza la lista de mediciones disponibles para superponer.
+    \item[\metodolabel{\_save\_session\_data()}] Invoca al \texttt{FileManager} para guardar los datos de la sesión.
+    \item[\metodolabel{\_clear\_session\_data\_internal(log)}] Reinicia todos los objetos de estado, limpiando la memoria.
+    \item[\metodolabel{\_clear\_session\_data()}] Pide confirmación al usuario antes de borrar todos los datos de la sesión.
+\end{description}
+\end{arquibox}
+
+\section{Controladores de Lógica> filemanager.py , calculationcontroller.py}
+
+\begin{arquibox}[Clase \texttt{FileManager}]
+Para mantener el código principal limpio y enfocado en la lógica de la aplicación, todas las operaciones de archivos se encapsularon en esta clase dedicada. Su única responsabilidad es manejar la lectura y escritura de datos en el disco.
+\setlist{nolistsep}
+\begin{description}[leftmargin=!,style=nextline]
+    \item[\metodolabel{\_\_init\_\_(app)}] Guarda una referencia a la aplicación principal para poder acceder a los datos que necesita guardar.
+    \item[\metodolabel{export\_log()}] Abre un diálogo de "Guardar como..." y escribe el contenido del log de eventos a un archivo de texto.
+    \item[\metodolabel{export\_graph\_active\_tab()}] Guarda una imagen de alta resolución del gráfico de la pestaña visible.
+    \item[\metodolabel{save\_session\_data()}] Guarda todos los datos de la sesión (referencia y mediciones) en un archivo CSV.
+    \item[\metodolabel{save\_selected\_superimposed\_data()}] Guarda en un CSV únicamente los espectros que el usuario ha seleccionado en la lista de superposición.
+    \item[\metodolabel{get\_save\_filename\_for\_sequential()}] Pide al usuario la ubicación para guardar los resultados de una medición secuencial antes de que comience.
+    \item[\metodolabel{save\_sequential\_data(m\_state)}] Escribe los resultados de una medición secuencial a un archivo CSV.
+    \item[\metodolabel{\_get\_active\_figure\_and\_prefix()}] Método interno que determina qué pestaña está activa para saber qué gráfico exportar.
+    \item[\metodolabel{\_get\_save\_filename(title, ...)}] Abre un diálogo de "Guardar como..." estándar, sugiriendo un nombre de archivo con timestamp.
+    \item[\metodolabel{\_write\_csv(filename, data\_lines, ...)}] Función interna que maneja la escritura de datos a un archivo CSV de manera formateada.
+\end{description}
+\end{arquibox}
+
+\begin{arquibox}[Clase \texttt{CalculationController}]
+Esta clase encapsula toda la lógica matemática para el cálculo de concentración. Fue aislada para que el código de la clase principal fuera más legible y para tener toda la matemática en un solo lugar.
+\setlist{nolistsep}
+\begin{description}[leftmargin=!,style=nextline]
+    \item[\metodolabel{\_\_init\_\_(app)}] Guarda una referencia a la aplicación principal para acceder a los datos del espectro y a los parámetros de calibración activos.
+    \item[\metodolabel{update\_display\_only()}] Calcula la concentración con los datos actuales y actualiza las etiquetas de la UI en tiempo real, sin registrar el dato.
+    \item[\metodolabel{calculate\_and\_register()}] Calcula la concentración y guarda el espectro actual como una nueva medición en la lista de la sesión.
+    \item[\metodolabel{\_calculate\_concentration\_core()}] Es la función central de la clase. Implementa la lógica para decidir qué método de cálculo usar (Modelo de Transferencia, Curva de Sesión o Ley de Beer-Lambert) y aplica la matemática correspondiente.
+    \item[\metodolabel{\_get\_current\_absorbance\_spectrum()}] Calcula el espectro de absorbancia actual ($A = -\log_{10}(I/I_0)$) a partir de la intensidad de la muestra y de la referencia.
+\end{description}
+\end{arquibox}
+
+\section{Comunicación Asíncrona: \texttt{workers.py}}
+Este módulo es crucial para que la aplicación sea fluida. Define el "trabajador" que se ejecuta en un hilo separado para manejar la comunicación serial.
+
+\begin{arquibox}[Clase \texttt{SerialWorker(QObject)}]
+Su única misión es leer continuamente el puerto serie sin bloquear la interfaz. Cuando recibe un dato, emite una señal para notificar al hilo principal, manteniendo la UI siempre responsiva.
+\setlist{nolistsep}
+\begin{description}[leftmargin=!,style=nextline]
+    \item[\metodolabel{\_\_init\_\_(serial\_instance)}] Recibe la instancia del puerto serial que fue abierta en la clase principal.
+    \item[\metodolabel{run()}] Es el bucle principal que se ejecuta en el hilo secundario. Mientras esté activo, lee los datos del puerto y emite la señal \texttt{data\_received} con cada nueva línea.
+    \item[\metodolabel{stop()}] Se llama desde el hilo principal para detener al worker de forma segura, finalizando el bucle de lectura.
+\end{description}
+\end{arquibox}
+
+\section{El Firmware: \texttt{Espectrofotometro.ino}}
+Este es el código que se ejecuta en el microcontrolador Arduino. Su función es ser el puente de bajo nivel entre el software y el hardware físico (sensor y LED). Fue diseñado para ser simple y reactivo.
+\begin{description}[leftmargin=!,style=nextline]
+    \item[\metodolabel{setup()}] Se ejecuta una vez al iniciar el Arduino. Configura la comunicación serial, inicializa el sensor y prepara el pin del LED.
+    \item[\metodolabel{loop()}] Es el corazón del firmware, se ejecuta continuamente. Revisa si ha llegado un comando del software y, si está en modo de medición, toma una lectura y la envía.
+    \item[\metodolabel{processCommand(cmd)}] Parsea los comandos que llegan por serial ("calibrar", "empezar", "detener") y cambia el estado del Arduino.
+    \item[\metodolabel{printMeasurements(prefix)}] Toma la lectura de los 6 canales del sensor, la formatea como una cadena de texto y la envía por el puerto serie al software.
+    \item[\metodolabel{setWhiteLEDOn() / setWhiteLEDOff()}] Funciones simples para encender y apagar el LED.
+\end{description}
+
+% -----------------------------------------------------------------------------
+\chapter{El Modelo: Gestión del Estado y los Datos}\label{chap:modelo}
+% -----------------------------------------------------------------------------
+Esta capa define la estructura de todos los datos de la aplicación. Para esto, se utilizan \texttt{dataclasses} de Python, que permiten crear contenedores de estado claros y organizados. Esta es la "única fuente de verdad" de la aplicación, lo que evita que el estado se disperse y facilita la depuración.
+
+\section{Estructuras de Estado Centralizadas: \texttt{app\_state.py}}
+Este archivo no contiene lógica, solo la definición de la estructura de los datos.
+
+\begin{notebox}[Dataclasses de Estado]
+Las siguientes clases son contenedores de datos. Su única función es almacenar y organizar el estado de la aplicación de una manera limpia y predecible.
+\setlist{nolistsep}
+\begin{description}[leftmargin=!,style=nextline]
+    \item[\metodolabel{PlotOptionsState}] Almacena las opciones de visualización de los gráficos: qué espectros superponer, si la escala es logarítmica, si se muestran marcadores y el tipo de gráfico actual.
+    \item[\metodolabel{MeasurementDataState}] Contiene los datos de la sesión actual: las lecturas de referencia (I\textsubscript{0}) y de muestra (I), y si la sustracción de blanco está activa.
+    \item[\metodolabel{CalibrationState}] Almacena todos los parámetros y modelos de calibración: la curva de sesión activa, los modelos de transferencia y los parámetros de calibraciones de referencia externas.
+    \item[\metodolabel{MeasurementControlState}] Gestiona el estado de una medición en curso, especialmente en el modo secuencial: lleva la cuenta del progreso, acumula las muestras para promediar y guarda el nombre del archivo de salida.
+\end{description}
+\end{notebox}
+
+% -----------------------------------------------------------------------------
+\chapter{La Vista: Interfaz de Usuario}\label{chap:vista}
+% -----------------------------------------------------------------------------
+La Vista comprende todos los componentes visuales con los que interactúa el usuario. Está diseñada de forma modular para promover la reutilización de código y la separación de responsabilidades.
+
+\section{El Panel Base: \texttt{base\_panel.py}}
+\begin{arquibox}[Clase \texttt{BasePanel(QWidget)}]
+Esta clase base abstracta fue creada para que todos los paneles principales (pestañas) heredaran de ella. De esta forma, se asegura que todos tengan una estructura y una forma de comunicarse consistentes, evitando duplicar código.
+\setlist{nolistsep}
+\begin{description}[leftmargin=!,style=nextline]
+    \item[\metodolabel{\_\_init\_\_(parent\_app)}] Inicializa el panel y guarda una referencia a la aplicación principal para poder comunicarse con ella.
+    \item[\metodolabel{\_setup\_base\_ui()}] Configura la disposición visual básica, que es la misma para todos los paneles: una columna para gráficos y otra para controles.
+    \item[\metodolabel{\_init\_plots()}] Método abstracto que las clases hijas deben implementar para inicializar sus gráficos específicos.
+    \item[\metodolabel{\_init\_controls()}] Método abstracto que las clases hijas deben implementar para inicializar sus controles específicos.
+    \item[\metodolabel{\_connect\_panel\_signals()}] Conecta las señales internas del panel.
+    \item[\metodolabel{\_log(message, ...)}] Permite que cualquier panel envíe mensajes al log centralizado de la aplicación.
+    \item[\metodolabel{\_get\_plot\_colors()}] Devuelve la paleta de colores de gráfico correspondiente al tema visual actual.
+    \item[\metodolabel{on\_theme\_changed(is\_dark\_theme)}] Se activa para aplicar los colores del nuevo tema a los gráficos del panel.
+\end{description}
+\end{arquibox}
+
+\section{Paneles de Pestañas (Implementaciones de \texttt{BasePanel})}
+\subsubsection{Panel de Espectro Principal: \texttt{main\_spectrum\_panel.py}}
+\begin{arquibox}[Clase \texttt{MainSpectrumPanel(BasePanel)}]
+Esta es la pestaña principal para la visualización de datos. Su trabajo es recibir los datos del controlador y renderizar los espectros de diferentes formas.
+\setlist{nolistsep}
+\begin{description}[leftmargin=!,style=nextline]
+    \item[\metodolabel{update\_plot(plot\_data)}] Es el método principal del panel. Recibe un diccionario con el estado actual y redibuja completamente el gráfico de Matplotlib.
+    \item[\metodolabel{\_transform\_data\_for\_plotting(intensity\_data, ...)}] Convierte un espectro de intensidad a absorbancia o transmitancia.
+    \item[\metodolabel{\_get\_adjusted\_absorbance(plot\_data)}] Calcula el espectro de absorbancia "ajustada" aplicando un modelo de transferencia.
+    \item[\metodolabel{\_finalize\_plot\_style(plot\_data, ...)}] Aplica los toques finales al gráfico: etiquetas, título, leyendas, etc.
+    \item[\metodolabel{\_on\_plot\_hover(event)}] Muestra una etiqueta emergente con el valor exacto de un punto de datos cuando el usuario pasa el ratón sobre él.
+    \item[\metodolabel{\_on\_superimpose\_item\_changed()}] Emite una señal cada vez que el usuario cambia la selección de espectros a superponer.
+    \item[\metodolabel{update\_superimpose\_list(measurement\_data\_raw, ...)}] Carga la lista de mediciones de la sesión para que el usuario pueda seleccionar cuáles superponer.
+    \item[\metodolabel{set\_plot\_options\_state(show\_markers, ...)}] Actualiza el estado de los checkboxes de opciones del gráfico para que coincida con el estado global.
+\end{description}
+\end{arquibox}
+
+\subsubsection{Panel de Curva de Concentración: \texttt{concentration\_curve\_panel.py}}
+\begin{arquibox}[Clase \texttt{ConcentrationCurvePanel(BasePanel)}]
+Esta pestaña es una herramienta flexible para que el usuario pueda construir gráficos personalizados de una variable X contra un valor Y medido.
+\setlist{nolistsep}
+\begin{description}[leftmargin=!,style=nextline]
+    \item[\metodolabel{request\_direct\_value\_measurement()}] Pide a la aplicación principal que realice una medición única y directa de un valor específico.
+    \item[\metodolabel{handle\_direct\_measurement\_result(...)}] Recibe el resultado de la medición directa y lo carga en la UI.
+    \item[\metodolabel{add\_data\_point()}] Añade un nuevo punto (X, Y) a la lista de datos del panel y actualiza la tabla y el gráfico.
+    \item[\metodolabel{remove\_selected\_data\_point()}] Elimina el punto que el usuario haya seleccionado en la tabla.
+    \item[\metodolabel{update\_table\_and\_plot()}] Actualiza la tabla y el gráfico para reflejar los datos actuales.
+    \item[\metodolabel{clear\_points\_for\_current\_view()}] Limpia solo los puntos de la vista actual (sin afectar datos de otras longitudes de onda).
+    \item[\metodolabel{clear\_all\_points()}] Borra todos los puntos de datos almacenados en este panel.
+\end{description}
+\end{arquibox}
+
+\subsubsection{Panel de Calibración: \texttt{calibration\_curve\_tab.py}}
+\begin{arquibox}[Clase \texttt{CalibrationCurveTab(BasePanel)}]
+Esta es una de las partes más potentes de la aplicación, donde se crean los modelos matemáticos para la cuantificación precisa de muestras.
+\setlist{nolistsep}
+\begin{description}[leftmargin=!,style=nextline]
+    \item[\metodolabel{request\_direct\_absorbance\_measurement()}] Pide a la app principal una medición directa de absorbancia para un estándar de calibración.
+    \item[\metodolabel{handle\_direct\_measurement\_result(...)}] Procesa el resultado de la medición y lo carga en el campo correspondiente.
+    \item[\metodolabel{add\_calibration\_point()}] Añade un nuevo punto de calibración a la lista.
+    \item[\metodolabel{update\_table\_and\_plot\_all()}] Actualiza la tabla de puntos, recalcula los ajustes de regresión lineal y redibuja el gráfico.
+    \item[\metodolabel{\_calculate\_fits(points\_data)}] Es el núcleo matemático del panel. Usa SciPy para calcular las regresiones lineales de la calibración de sesión y del modelo de transferencia.
+    \item[\metodolabel{\_plot\_abs\_vs\_conc(points\_data)}] Dibuja el gráfico de la calibración de sesión.
+    \item[\metodolabel{\_plot\_transfer\_model(points\_data)}] Dibuja el gráfico del modelo de transferencia.
+    \item[\metodolabel{apply\_calibration\_to\_main\_app()}] Envía los modelos calculados a la aplicación principal para que puedan ser usados en la cuantificación.
+    \item[\metodolabel{save\_calibration\_data\_to\_file()}] Guarda los puntos de calibración de la longitud de onda actual en un archivo CSV.
+    \item[\metodolabel{load\_calibration\_data\_from\_file()}] Carga puntos de calibración desde un archivo CSV.
+\end{description}
+\end{arquibox}
+
+\section{Diálogos y Widgets de Utilidad}
+\subsubsection{Ventana de Ayuda: \texttt{help\_dialog.py}}
+\begin{arquibox}[Clase \texttt{HelpDialog(QDialog)}]
+Implementa una ventana de ayuda completa con un árbol de temas navegable.
+\setlist{nolistsep}
+\begin{description}[leftmargin=!,style=nextline]
+    \item[\metodolabel{\_create\_help\_topics()}] Define un diccionario con todo el texto de ayuda formateado en HTML.
+    \item[\metodolabel{\_populate\_tree(...)}] Construye el árbol visual a partir del diccionario de temas.
+    \item[\metodolabel{\_display\_topic(item)}] Muestra el contenido HTML del tema seleccionado por el usuario.
+\end{description}
+\end{arquibox}
+
+\subsubsection{Widgets de Utilidad: \texttt{utils.py}}
+\begin{arquibox}[Clase \texttt{PlotWidget(QWidget)}]
+Esta clase encapsula un gráfico de Matplotlib para poder integrarlo fácilmente en la interfaz de PyQt5 y controlar su estilo.
+\setlist{nolistsep}
+\begin{description}[leftmargin=!,style=nextline]
+    \item[\metodolabel{apply\_theme(theme\_colors)}] Aplica una paleta de colores a todos los elementos del gráfico, permitiendo el cambio de tema.
+    \item[\metodolabel{style\_legend(theme\_colors)}] Aplica el estilo del tema a la leyenda del gráfico.
+    \item[\metodolabel{clear()}] Limpia el contenido del gráfico.
+    \item[\metodolabel{draw()}] Redibuja el gráfico para que los cambios sean visibles.
+\end{description}
+\end{arquibox}
+
+\begin{arquibox}[Clase \texttt{CollapsibleGroupBox(QGroupBox)}]
+Este widget fue diseñado para organizar la interfaz. Se comporta como un grupo de controles normal, pero con un botón que permite al usuario mostrar u ocultar su contenido, reduciendo el desorden visual.
+\setlist{nolistsep}
+\begin{description}[leftmargin=!,style=nextline]
+    \item[\metodolabel{\_toggle\_content()}] Muestra u oculta el contenido del grupo y actualiza el icono del botón.
+\end{description}
+\end{arquibox}
+
+% -----------------------------------------------------------------------------
+\chapter{Módulos de Soporte y Constantes}\label{chap:soporte}
+% -----------------------------------------------------------------------------
+Estos módulos no contienen lógica compleja, pero son fundamentales para la consistencia y el mantenimiento del código.
+
+\section{Constantes Globales: \texttt{constants.py}}
+Este archivo centraliza todos los valores fijos. Esta práctica es crucial para el mantenimiento: si se necesita cambiar un color o un texto, solo se debe modificar en este archivo en lugar de buscarlo en todo el proyecto.
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Parámetros del Sensor:} Las longitudes de onda del sensor y sus etiquetas para la UI.
+    \item \textbf{Paletas de Colores:} Dos diccionarios que definen los colores para los gráficos en los temas oscuro y claro.
+    \item \textbf{Hojas de Estilo (QSS):} Dos grandes strings que contienen el código CSS que le da estilo a toda la interfaz gráfica.
+    \item \textbf{Textos de Ayuda:} Un diccionario que contiene todos los textos para los diálogos de ayuda contextual.
+\end{itemize}
+
+\section{Tipos y Enumeraciones: \texttt{measurement\_type.py}}
+Este archivo usa enumeraciones de Python para definir constantes con nombre. Esto mejora la legibilidad y previene errores de tipeo.
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Clase `MeasurementType`:} Define los tipos de medición: \texttt{CONTINUOUS}, \texttt{SINGLE\_AVERAGED}, \texttt{SEQUENTIAL}.
+    \item \textbf{Enum `PlotType`:} Define los tipos de gráficos: \texttt{INTENSITY}, \texttt{ABSORBANCE}, \texttt{TRANSMITTANCE}.
+    \item \textbf{Enum `AppState`:} Define los estados principales de la aplicación: \texttt{IDLE}, \texttt{MEASURING\_MAIN}, \texttt{MEASURING\_DIRECT}, \texttt{CLOSING}.
+\end{itemize}
+
+\end{document}

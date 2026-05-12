@@ -1,0 +1,222 @@
+@startuml
+skinparam classAttributeIconSize 0
+skinparam classFontSize 10
+skinparam linetype ortho
+skinparam ranksep 60
+skinparam nodesep 50
+
+!define MAIN_COLOR #4CAF50
+!define PANEL_COLOR #2196F3
+!define STATE_COLOR #FF9800
+!define CONTROLLER_COLOR #9C27B0
+!define UTIL_COLOR #607D8B
+
+' Clase Principal - Centro
+class SpectrometerApp MAIN_COLOR {
+  - plot_options: PlotOptionsState
+  - data_state: MeasurementDataState
+  - calibration_state: CalibrationState
+  - measurement_control_state: MeasurementControlState
+  - calculation_controller: CalculationController
+  - file_manager: FileManager
+  - serial_worker: SerialWorker
+  - main_spectrum_panel: MainSpectrumPanel
+  - concentration_curve_panel: ConcentrationCurvePanel
+  - calibration_curve_tab: CalibrationCurveTab
+  - help_dialog: HelpDialog
+  --
+  + start_measurement()
+  + stop_measurement()
+  + update_ui()
+  + handle_serial_data(data: str)
+  + switch_theme()
+  + closeEvent(event)
+  - _setup_ui()
+  - _connect_signals()
+}
+
+' Estados - Izquierda
+class PlotOptionsState STATE_COLOR {
+  + main_plot_type: PlotType
+  + use_log_scale_y: bool
+  + show_markers: bool
+  --
+  + __init__()
+  + reset_to_defaults()
+}
+
+class MeasurementDataState STATE_COLOR {
+  + calibration_data_raw: List[str]
+  + measurement_data_raw: List[str]
+  + last_measurement_values: ndarray
+  + blank_subtraction_active: bool
+  --
+  + __init__()
+  + clear_all_data()
+}
+
+class CalibrationState STATE_COLOR {
+  + active_session_calibration_curve: Tuple
+  + active_transfer_model: Dict
+  + epsilon_session: str
+  + path_length_session: str
+  --
+  + __init__()
+  + clear_session_calibration()
+}
+
+' Paneles - Arriba
+abstract class BasePanel PANEL_COLOR {
+  # parent_app: SpectrometerApp
+  # is_dark_theme: bool
+  --
+  + __init__(parent_app)
+  + on_theme_changed(is_dark: bool)
+  # {abstract} _init_plots()
+  # {abstract} _init_controls()
+  <<signal>> logMessage(str)
+}
+
+class MainSpectrumPanel PANEL_COLOR {
+  - plot_widget: PlotWidget
+  - wavelengths: ndarray
+  --
+  + update_spectrum_plot()
+  + handle_measurement_request()
+  # _init_plots()
+  # _init_controls()
+}
+
+class ConcentrationCurvePanel PANEL_COLOR {
+  - plot_widget: PlotWidget
+  - concentration_points: List[Tuple]
+  --
+  + add_concentration_point()
+  + update_concentration_plot()
+  # _init_plots()
+  # _init_controls()
+}
+
+class CalibrationCurveTab PANEL_COLOR {
+  - calibration_points: List[Tuple]
+  - plot_widget_abs_vs_conc: PlotWidget
+  --
+  + add_calibration_point()
+  + apply_calibration_to_main_app()
+  + load_calibration_data()
+  # _init_plots()
+  # _init_controls()
+  <<signal>> calibrationApplied()
+}
+
+' Controladores - Derecha
+class CalculationController CONTROLLER_COLOR {
+  - app: SpectrometerApp
+  --
+  + update_display_only()
+  + calculate_and_register()
+  - _calculate_concentration_core()
+  - _beer_lambert_calculation()
+}
+
+class FileManager UTIL_COLOR {
+  - app: SpectrometerApp
+  --
+  + export_log()
+  + export_plot()
+  + save_session()
+  + load_session()
+}
+
+class SerialWorker UTIL_COLOR {
+  - port: str
+  - is_running: bool
+  --
+  + start(port: str, baudrate: int)
+  + stop()
+  + send_command(command: str)
+  + run()
+  <<signal>> dataReceived(str)
+  <<signal>> errorOccurred(str)
+}
+
+' Utilidades - Abajo
+class PlotWidget UTIL_COLOR {
+  - figure: Figure
+  - canvas: FigureCanvas
+  --
+  + clear()
+  + plot(x_data, y_data)
+  + apply_theme(is_dark: bool)
+}
+
+class HelpDialog UTIL_COLOR {
+  - content: Dict[str, str]
+  --
+  + show_help(section: str)
+  + load_help_content()
+}
+
+' Enums
+enum PlotType {
+  INTENSITY
+  ABSORBANCE
+  TRANSMITTANCE
+}
+
+enum MeasurementType {
+  CONTINUOUS
+  SINGLE_AVERAGED
+  SEQUENTIAL
+}
+
+' Herencia
+QWidget <|-- SpectrometerApp
+QWidget <|-- BasePanel
+BasePanel <|-- MainSpectrumPanel
+BasePanel <|-- ConcentrationCurvePanel
+BasePanel <|-- CalibrationCurveTab
+QWidget <|-- PlotWidget
+QDialog <|-- HelpDialog
+QThread <|-- SerialWorker
+
+' Composición - SpectrometerApp como centro
+SpectrometerApp *-- PlotOptionsState
+SpectrometerApp *-- MeasurementDataState
+SpectrometerApp *-- CalibrationState
+SpectrometerApp *-- CalculationController
+SpectrometerApp *-- FileManager
+SpectrometerApp *-- SerialWorker
+SpectrometerApp *-- MainSpectrumPanel
+SpectrometerApp *-- ConcentrationCurvePanel
+SpectrometerApp *-- CalibrationCurveTab
+SpectrometerApp *-- HelpDialog
+
+' Agregación
+MainSpectrumPanel o-- PlotWidget
+ConcentrationCurvePanel o-- PlotWidget
+CalibrationCurveTab o-- PlotWidget
+
+' Dependencias
+CalculationController ..> SpectrometerApp
+FileManager ..> SpectrometerApp
+
+' Referencias
+PlotOptionsState ..> PlotType
+SpectrometerApp ..> MeasurementType
+
+' Layout para hoja carta
+PlotOptionsState -[hidden]down- MeasurementDataState
+MeasurementDataState -[hidden]down- CalibrationState
+
+MainSpectrumPanel -[hidden]up- BasePanel
+ConcentrationCurvePanel -[hidden]up- BasePanel
+CalibrationCurveTab -[hidden]up- BasePanel
+
+CalculationController -[hidden]down- FileManager
+FileManager -[hidden]down- SerialWorker
+
+PlotWidget -[hidden]right- HelpDialog
+PlotType -[hidden]right- MeasurementType
+
+@enduml

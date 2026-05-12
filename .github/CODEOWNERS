@@ -1,0 +1,6 @@
+# CODEOWNERS
+# This file ensures that any changes to the repository must be 
+# reviewed and approved by the project owners.
+
+# Default owners for everything in the repo
+*       @sebashebe
