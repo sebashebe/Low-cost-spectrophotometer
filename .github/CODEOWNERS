@@ -3,4 +3,10 @@
 # reviewed and approved by the project owners.
 
 # Default owners for everything in the repo
-*       @sebashebe
+*               @sebashebe
+
+# Specific protection for legal and configuration files
+/LICENSE                @sebashebe
+/.github/               @sebashebe
+/README.md              @sebashebe
+/Espectrophotometer.pdf @sebashebe

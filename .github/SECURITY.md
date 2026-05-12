@@ -1,13 +1,24 @@
-# SECURITY POLICY
+# Security Policy
 
-## Proprietary Software Notice
-This repository contains proprietary and confidential intellectual property of the Author, **Universidad de los Andes**, and the **Biomicrosystems Research Group**. 
+## Intellectual Property Protection
+This repository contains proprietary research software, technical documentation, and scientific data developed by **Universidad de los Andes** and the **Biomicrosystems Research Group**. All rights are reserved. Any unauthorized distribution, reverse engineering, or commercial use is strictly prohibited under international copyright laws.
 
-## Reporting Security Vulnerabilities
-If you discover a security vulnerability or a potential breach of the licensing terms (unauthorized use/distribution), please do **NOT** open a public Issue. Instead, please report it privately through the official channels of the Biomicrosystems Research Group or the Universidad de los Andes.
+## Supported Versions
+Only the latest version of the Low Cost Spectrophotometer system is supported for security updates and technical validation.
 
-## Enforcement
-The owners of this software take intellectual property rights seriously. Any unauthorized attempts to bypass security controls, reverse engineer, or distribute this software will be pursued legally to the full extent of international copyright laws.
+| Version | Supported          |
+| ------- | ------------------ |
+| v1.x    | :white_check_mark: |
+| < v1.0  | :x:                |
+
+## Reporting a Vulnerability
+If you identify a security vulnerability or unauthorized access point, please do **not** open a public issue. Instead, report it through the following channels:
+
+1. **Email:** Contact the lead researcher at the Biomicrosystems Research Group (Universidad de los Andes).
+2. **Confidentiality:** Please provide a detailed description of the vulnerability and steps to reproduce it. We request that you maintain confidentiality until the issue is addressed.
+
+## Enforcement of License Terms
+Any attempt to bypass system security, modify licensing checks, or extract proprietary algorithms will be treated as a breach of intellectual property. We monitor the use of this software to ensure compliance with our research and licensing standards.
 
 ---
-*Thank you for respecting the scientific integrity and intellectual property of this research.*
+*Scientific Integrity • Intellectual Property • Research Excellence*
